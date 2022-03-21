@@ -3,16 +3,9 @@ import os
 import random
 
 client = discord.Client()
-TOKEN = os.environ['DISCORD_TOKEN']
-ADMIN_ID = os.environ['ADMIN_ID']
+TOKEN = str(os.environ['DISCORD_TOKEN'])
+ADMIN_ID = int(os.environ['ADMIN_ID'])
 NAMES_FILE = 'names.txt'
-
-
-def admin_check(message):
-    if message.author.id == ADMIN_ID:
-        return True
-    else:
-        return False
 
 
 # log in event
@@ -28,12 +21,18 @@ async def on_message(message):
     if message.author == client.user:
         return
 
+    # admin check
+    is_admin = False
+    if message.author.id == ADMIN_ID:
+        print('is admin')
+        is_admin = True
+
     # !test
     """
     Checks if user who put !test is an admin, and returns their ID number
     """
     if message.content.startswith('!test'):
-        if admin_check(message):
+        if is_admin:
             await message.channel.send(f'I saw an admin say {message.content} from {message.author.id}')
         else:
             await message.channel.send(f'I saw a non admin say {message.content} from {message.author.id}')
@@ -49,10 +48,17 @@ async def on_message(message):
         with open(NAMES_FILE, 'r') as names:
             namelist = names.read().splitlines()
 
+        if len(name) > 10:
+            if is_admin:
+                print("admin added more than 10 names")
+            else:
+                await message.channel.send("Too many names at once! Please limit to under 10")
+                return
+
         for x in name[1:]:
             if x not in namelist or len(x) < 20:
                 with open(NAMES_FILE, 'a') as names:
-                    names.write('\n' + x)
+                    names.write('\n' + x.title())
                     count += 1
 
         if count >= 1:
