@@ -24,7 +24,6 @@ async def on_message(message):
     # admin check
     is_admin = False
     if message.author.id == ADMIN_ID:
-        print('is admin')
         is_admin = True
 
     # !test
