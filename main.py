@@ -1,67 +1,89 @@
 import discord
 import os
 import random
-import linecache
 
 client = discord.Client()
-TOKEN = os.environ['OAtoken']
-admin_id = 139160626902728704
+TOKEN = os.environ['DISCORD_TOKEN']
+ADMIN_ID = os.environ['ADMIN_ID']
+NAMES_FILE = 'names.txt'
+
 
 def admin_check(message):
-  if message.author.id == admin_id:
-    return True
-  else:
-    return False
+    if message.author.id == ADMIN_ID:
+        return True
+    else:
+        return False
 
-#log in event
+
+# log in event
 @client.event
 async def on_ready():
-  print(f"Logged in as {client.user}")
+    print(f"Logged in as {client.user}")
 
-#messages
+
+# messages
 @client.event
 async def on_message(message):
-  #self check
-  if message.author == client.user:
-    return
+    # self check
+    if message.author == client.user:
+        return
 
-  #!test
-  if message.content.startswith('!test'):
-    if admin_check(message):
-      await message.channel.send(f'i saw an admin say {message.content} from {message.author.id}')
-    else:
-       await message.channel.send(f'i saw a non admin say {message.content} from {message.author.id}')
+    # !test
+    """
+    Checks if user who put !test is an admin, and returns their ID number
+    """
+    if message.content.startswith('!test'):
+        if admin_check(message):
+            await message.channel.send(f'I saw an admin say {message.content} from {message.author.id}')
+        else:
+            await message.channel.send(f'I saw a non admin say {message.content} from {message.author.id}')
 
-  #!addname
-  if message.content.startswith('!addname'):
-    name = message.content.split()
-    with open('names.txt','r') as names:
-      namelist = names.read()
+    # !addname
+    """
+    Takes in name from user input, and updates names.txt with it
+    """
+    if message.content.startswith('!addname'):
+        name = message.content.split()
+        count = 0
 
-    if len(name) > 2 or len(name[1]) > 15:
-      await message.channel.send("name 2 long")
-      
-    if name[1] in namelist:
-      await message.channel.send("name already in names list")
-    else:
-      with open('names.txt','a+') as names:
-        names.write('\n' + name[1])
-        await message.channel.send("name added")
-      
+        with open(NAMES_FILE, 'r') as names:
+            namelist = names.read().splitlines()
 
-  #!name
-  if message.content.startswith('!name'):
-    with open('names.txt','r') as names:
-        nameslist = names.read().splitlines() 
-        linecount = len(nameslist)
-      
-    firstname = random.randint(0,linecount-1)
-    lastname = random.randint(0,linecount-1)
-    
-    await message.channel.send(f"{nameslist[firstname]} {nameslist[lastname]}")
+        for x in name[1:]:
+            if x not in namelist or len(x) < 20:
+                with open(NAMES_FILE, 'a') as names:
+                    names.write('\n' + x)
+                    count += 1
 
-  #!howname
-  if message.content.startswith('!help'):
-    await message.channel.send("""Use !name to generate a name \nUse !addname to add a name to the list of names to be generated from""")
-      
-client.run(TOKEN)
+        if count >= 1:
+            await message.channel.send("Names added!")
+            return
+        else:
+            await message.channel.send("Name already in names list!")
+            return
+
+    # !name
+    """
+    Generates a random two word name from names.txt
+    """
+    if message.content.startswith('!name'):
+        with open(NAMES_FILE, 'r') as names:
+            names_list = names.read().splitlines()
+            line_count = len(names_list)
+
+        firstname = random.randint(0, line_count - 1)
+        lastname = random.randint(0, line_count - 1)
+
+        await message.channel.send(f"{names_list[firstname]} {names_list[lastname]}")
+
+    # !help
+    """
+    Returns how to use !addname and !name
+    """
+    if message.content.startswith('!help'):
+        await message.channel.send(
+            """Use !name to generate a name \nUse !addname to add a name to the list of names to be generated from""")
+
+
+if __name__ == "__main__":
+    client.run(TOKEN)
