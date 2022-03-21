@@ -3,14 +3,28 @@ import os
 import random
 
 client = discord.Client()
+
+try:
+    TOKEN = str(os.environ['DISCORD_TOKEN'])
+    print('token retrieved')
+    ADMIN_ID = int(os.environ['ADMIN_ID'])
+    print('admin_id retrieved')
+except KeyError:
+    print("Enter discord token: ")
+    os.environ['DISCORD_TOKEN'] = input()
+    print("Enter admin_id: ")
+    os.environ['ADMIN_ID'] = input()
+
 TOKEN = str(os.environ['DISCORD_TOKEN'])
 ADMIN_ID = int(os.environ['ADMIN_ID'])
+
 NAMES_FILE = 'names.txt'
 
 
 # log in event
 @client.event
 async def on_ready():
+    print("Retrieved token and ID")
     print(f"Logged in as {client.user}")
 
 
