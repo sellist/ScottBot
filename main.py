@@ -14,9 +14,8 @@ except KeyError:
     os.environ['DISCORD_TOKEN'] = input()
     print("Enter admin_id: ")
     os.environ['ADMIN_ID'] = input()
-
-TOKEN = str(os.environ['DISCORD_TOKEN'])
-ADMIN_ID = int(os.environ['ADMIN_ID'])
+    TOKEN = str(os.environ['DISCORD_TOKEN'])
+    ADMIN_ID = int(os.environ['ADMIN_ID'])
 
 NAMES_FILE = 'names.txt'
 
@@ -61,25 +60,21 @@ async def on_message(message):
         with open(NAMES_FILE, 'r') as names:
             namelist = names.read().splitlines()
 
-        if len(name) > 10:
-            if is_admin:
-                print("admin added more than 10 names")
-            else:
-                await message.channel.send("Too many names at once! Please limit to under 10")
-                return
+        if len(name) > 10 and not is_admin:
+            await message.channel.send("Too many names at once! Please limit to under 10")
+            return
 
         for x in name[1:]:
-            if x not in namelist or len(x) < 20:
+            if x not in namelist or 20 < len(x) > 1:
                 with open(NAMES_FILE, 'a') as names:
                     names.write('\n' + x.title())
-                    count += 1
+                count += 1
 
         if count >= 1:
-            await message.channel.send("Names added!")
-            return
+            await message.add_reaction('\N{THUMBS UP SIGN}')
         else:
-            await message.channel.send("Name already in names list!")
-            return
+            await message.add_reaction('\N{THUMBS DOWN SIGN}')
+
 
     # !name
     """
