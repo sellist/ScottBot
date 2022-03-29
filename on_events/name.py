@@ -9,12 +9,11 @@ class Names:
     def __init__(self, file: str):
         self.file_name = file
 
-    def check_if_valid(self, string):
+    def check_if_valid(self, string: str, limit=20):
         """
         Takes name string as input, checks if name is valid (below max length, not in names.txt)
         returns boolean if valid or not
         """
-        limit = 20
 
         with open(self.file_name, 'r') as names:
             namelist = names.read().splitlines()
@@ -30,13 +29,13 @@ class Names:
         Takes string as input, splits it at whitespace, converts to Title, checks if names in list, appends to names.txt
         returns None
         """
-        limit = 20          # allowed max length of a name added
+        limit = 20  # allowed max length of a name added
         name = string.split()
 
         with open(self.file_name, 'r') as names:
             namelist = names.read().splitlines()
 
-        if name[0] == '!addname':       # this shouldn't go here but i'm lazy
+        if name[0] == '!addname':  # this shouldn't go here but i'm lazy
             del name[0]
 
         for x in name:
@@ -61,6 +60,6 @@ class Names:
 
 
 if __name__ == '__main__':
-    test = Names('names.txt')
+    test = Names('../names.txt')
     test.add_name("!addname Aborshy Scott")
     print(test.create_name())
