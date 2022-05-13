@@ -47,6 +47,10 @@ class NameCommands(commands.Cog):
         await ctx.send(
             """Use !name to generate a name \nUse !addname to add a name to the list of names to be generated from""")
 
+    @commands.command()
+    async def namecount(self, ctx):
+        await ctx.send(f" There are {Names.name_count()} names!")
+
 
 def setup(bot):
     bot.add_cog(NameCommands(bot))
