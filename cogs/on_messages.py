@@ -49,7 +49,8 @@ class NameCommands(commands.Cog):
 
     @commands.command()
     async def namecount(self, ctx):
-        await ctx.message.channel.send(f" There are {self.names.name_count()} names!")
+        name_count = self.names.name_count()
+        await ctx.message.channel.send(f" There are {name_count} names, with {name_count  * name_count} possible names!")
 
 
 def setup(bot):
