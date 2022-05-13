@@ -58,6 +58,11 @@ class Names:
 
         return names_list[firstname] + " " + names_list[lastname]
 
+    def name_count(self):
+        with open(self.file_name, 'r') as names:
+            names_list = names.read().splitlines()
+            return len(names_list)
+
 
 if __name__ == '__main__':
     test = Names('names.txt')
