@@ -11,9 +11,9 @@ class Names:
     This class pertains to the algorithms and methods related to creating a name from a provided list
     """
 
-    def __init__(self, names_file: str):
+    def __init__(self, names_file: str, teams_file: str):
         self.names_file = names_file
-        self.teams_file = names_file
+        self.teams_file = teams_file
 
     def check_valid_name(self, string: str, limit=20):
         """
