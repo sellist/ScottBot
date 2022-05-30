@@ -9,8 +9,7 @@ class NameCommands(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.names = Names('names.txt')
-        self.teams = Names('teams.txt')
+        self.names = Names('names.txt', 'teams.txt')
         pass
 
     @commands.command()
@@ -45,7 +44,7 @@ class NameCommands(commands.Cog):
         team = []
         print(ctx.message.content)
         for x in ctx.message.content.split()[1:]:
-            if self.teams.check_valid_team(x):
+            if self.names.check_valid_team(x):
                 print(f"{x} is valid")
                 team.append(x)
                 count += 1
@@ -76,7 +75,7 @@ class NameCommands(commands.Cog):
         await ctx.message.channel.send(f" There are {name_count} names, with {name_count * name_count} possible names!")
 
     @commands.command()
-    async def teamname(self, ctx):
+    async def team(self, ctx):
         await ctx.message.channel.send(self.names.create_team())
 
 
