@@ -1,4 +1,4 @@
-from name import Names
+from utils.name import Names
 from discord.ext import commands
 
 
@@ -10,6 +10,7 @@ class NameCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.names = Names('names.txt')
+        self.teams = Names('teams.txt')
         pass
 
     @commands.command()
@@ -22,7 +23,7 @@ class NameCommands(commands.Cog):
         name = []
         print(ctx.message.content)
         for x in ctx.message.content.split()[1:]:
-            if self.names.check_if_valid(x):
+            if self.names.check_valid_name(x):
                 print(f"{x} is valid")
                 name.append(x)
                 count += 1
@@ -32,6 +33,28 @@ class NameCommands(commands.Cog):
             with open('names.txt', 'a') as names:
                 for x in name:
                     names.write('\n' + x.title())
+
+        if count >= 1:
+            await ctx.message.add_reaction('\N{THUMBS UP SIGN}')
+        else:
+            await ctx.message.add_reaction('\N{THUMBS DOWN SIGN}')
+
+    @commands.command()
+    async def addteam(self, ctx):
+        count = 0
+        team = []
+        print(ctx.message.content)
+        for x in ctx.message.content.split()[1:]:
+            if self.teams.check_valid_team(x):
+                print(f"{x} is valid")
+                team.append(x)
+                count += 1
+            else:
+                print(f"{x} isn't valid")
+
+            with open('teams.txt', 'a') as teams:
+                for x in team:
+                    teams.write('\n' + x.title())
 
         if count >= 1:
             await ctx.message.add_reaction('\N{THUMBS UP SIGN}')
@@ -50,7 +73,11 @@ class NameCommands(commands.Cog):
     @commands.command()
     async def namecount(self, ctx):
         name_count = self.names.name_count()
-        await ctx.message.channel.send(f" There are {name_count} names, with {name_count  * name_count} possible names!")
+        await ctx.message.channel.send(f" There are {name_count} names, with {name_count * name_count} possible names!")
+
+    @commands.command()
+    async def teamname(self, ctx):
+        await ctx.message.channel.send(self.names.create_team())
 
 
 def setup(bot):
