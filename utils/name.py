@@ -8,7 +8,7 @@ Merge check_valid_x and add_x into one function using args passed into function 
 
 class Names:
     """
-    This class pertains to the algorithms and methods related to creating a name from a provided list
+    This class pertains to the methods related to creating a random name from a provided list
     """
 
     def __init__(self, names_file: str, teams_file: str):
@@ -73,6 +73,7 @@ class Names:
         # teamlist = teams.read().splitlines()
 
         if team[0] == '!addname':  # this shouldn't go here but i'm lazy
+            print("deleted !addname from command")
             del team[0]
 
         for x in team:
@@ -114,12 +115,33 @@ class Names:
         return names_list[firstname] + " " + names_list[lastname]
 
     def name_count(self):
+        """
+        Counts current names in file, and returns an int of how many names there are
+        :return: int
+        """
         with open(self.names_file, 'r') as names:
             names_list = names.read().splitlines()
             return len(names_list)
 
+    def remove_dupes(self):
+        """
+        Removes duplicates in names list, returns a count of how many names were removed
+        :return: int
+        """
+        with open(self.names_file, 'r') as names:
+            names_list = names.read().splitlines()
+            line_count = len(names_list)
+
+        new_list = list(set(names_list))
+        len_difference = line_count - len(new_list)
+
+        with open(self.names_file, 'w') as names:
+            names.write('\n'.join(new_list))
+
+        return len_difference
+
 
 if __name__ == '__main__':
-    test = Names('../names.txt')
+    test = Names('../names.txt', '../teams.txt')
     test.add_name("!addname Aborshy Scott")
     print(test.create_name())
