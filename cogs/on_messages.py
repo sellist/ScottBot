@@ -78,6 +78,11 @@ class NameCommands(commands.Cog):
     async def team(self, ctx):
         await ctx.message.channel.send(self.names.create_team())
 
+    @commands.command()
+    async def purgenamedupes(self, ctx):
+        difference = self.names.remove_dupes()
+        await ctx.message.channel.send(f"{difference} duplicated removed.")
+
 
 def setup(bot):
     bot.add_cog(NameCommands(bot))
