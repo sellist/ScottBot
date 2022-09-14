@@ -51,9 +51,6 @@ class Names:
         """
         name = string.split()
 
-        # with open(self.names_file, 'r') as names:
-        #   namelist = names.read().splitlines()
-
         if name[0] == '!addname':  # this shouldn't go here but i'm lazy
             del name[0]
 
@@ -68,9 +65,6 @@ class Names:
         :return: None
         """
         team = string.split()
-
-        # with open(self.teams_file, 'r') as teams:
-        # teamlist = teams.read().splitlines()
 
         if team[0] == '!addname':  # this shouldn't go here but i'm lazy
             print("deleted !addname from command")
@@ -100,6 +94,7 @@ class Names:
         return "The " + names_list[first_name] + " " + teams_list[team_name]
 
     def create_name(self):
+
         """
         Generates a random name from names list
         returns string of name
@@ -115,6 +110,11 @@ class Names:
         return names_list[firstname] + " " + names_list[lastname]
 
     def name_count(self):
+        """
+        TODO:
+        change this to __len__
+        """
+
         """
         Counts current names in file, and returns an int of how many names there are
         :return: int

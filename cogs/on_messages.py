@@ -10,7 +10,6 @@ class NameCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.names = Names('names.txt', 'teams.txt')
-        pass
 
     @commands.command()
     async def test(self, ctx):
@@ -18,6 +17,22 @@ class NameCommands(commands.Cog):
 
     @commands.command()
     async def addname(self, ctx):
+
+        """
+        TO DO:
+        Merge addname and addteam into one command after json switch
+        ex:
+        if !addname_var (!add name, second word is category now) is in supported_types:
+            category = json[!addname_var]
+        else:
+            return not supported type
+
+        remove check valid name outside of being a word without numbers
+
+
+        :param ctx: message
+        :return: none
+        """
         count = 0
         name = []
         print(ctx.message.content)
