@@ -1,47 +1,30 @@
-import os
 import sys
+import discord
 from discord.ext import commands
+import asyncio
 
-bot = commands.Bot(command_prefix='!')
-
-"""
-https://discordpy.readthedocs.io/en/stable/ext/commands/commands.html
-for switching to .bot
-"""
+from cogs import on_messages
 
 try:
     TOKEN = sys.argv[1]
-    print(f'Token retrieved')
+    print(f'Token retrieved = {TOKEN}')
+    intents = discord.Intents.default()
+    intents.message_content = True
+    intents.messages = True
+    bot_instance = commands.Bot(intents=intents, command_prefix="!")
 except IndexError:
-    exit(print("No arg detected, please enter Discord token as argument when running"))
+    exit("No arg detected, please enter Discord token as argument when running")
 
 
-# log in event
-@bot.event
-async def on_ready():
-    print(f"Logged in as {bot.user}")
+async def main():
 
+    @bot_instance.command()
+    async def on_message(message):
+        print(message)
+        await bot_instance.process_commands(message)
 
-# messages
-@bot.event
-async def on_message(message):
-    await bot.process_commands(message)
+    async with bot_instance:
+        await bot_instance.add_cog(on_messages.NameCommands(bot_instance))
+        await bot_instance.start(TOKEN)
 
-
-@bot.command()
-async def ping(ctx):
-    latency = bot.latency
-    await ctx.send(latency)
-
-
-for filename in os.listdir('./cogs'):
-    if filename.endswith('.py'):
-        bot.load_extension(f'cogs.{filename[:-3]}')
-
-try:
-    print("Logging in...")
-    bot.run(TOKEN)
-except Exception as e:
-    print('Error raised on login')
-    print(e)
-    exit(print("Exiting"))
+asyncio.run(main())
