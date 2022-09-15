@@ -1,9 +1,11 @@
 import sys
 import discord
 from discord.ext import commands
+from discord.ext import tasks
 import asyncio
 
 from cogs import on_messages
+from cogs import gitgetter
 
 try:
     TOKEN = sys.argv[1]
@@ -23,8 +25,12 @@ async def main():
         print(message)
         await bot_instance.process_commands(message)
 
+
+
+
     async with bot_instance:
         await bot_instance.add_cog(on_messages.NameCommands(bot_instance))
+        await bot_instance.add_cog(gitgetter.GitGetter(bot_instance))
         await bot_instance.start(TOKEN)
 
 asyncio.run(main())

@@ -20,22 +20,16 @@ class NameCommands(commands.Cog):
 
         """
         TO DO:
-        Merge addname and addteam into one command after json switch
-        ex:
-        if !addname_var (!add name, second word is category now) is in supported_types:
-            category = json[!addname_var]
-        else:
-            return not supported type
+        Merge addname and addteam into one command
 
         remove check valid name outside of being a word without numbers
-
 
         :param ctx: message
         :return: none
         """
         count = 0
         name = []
-        print(ctx.message.content)
+        print(ctx.message.content.split)
         for x in ctx.message.content.split()[1:]:
             if self.names.check_valid_name(x):
                 print(f"{x} is valid")
